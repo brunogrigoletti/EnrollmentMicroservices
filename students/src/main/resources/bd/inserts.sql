@@ -1,0 +1,2 @@
+INSERT INTO Student (name, address, rn) VALUES ('Pietra Manzoli', 'Avenida Osvaldo Gonçalves Cruz, 491', '123');
+INSERT INTO Student (name, address, rn) VALUES ('Bruno Laitano', 'Rua Doutor Timóteo, 390', '456');
