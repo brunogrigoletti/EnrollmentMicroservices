@@ -5,7 +5,6 @@ import laitano.bruno.entities.Subject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +12,6 @@ public class StudentManager implements StudentRepository {
 	private StudentJpaItfRep repository;
 	private List<String> stdCodes;
 
-    @Autowired
     public StudentManager(StudentJpaItfRep repository) {
         this.repository = repository;
 		this.stdCodes = new ArrayList<>();

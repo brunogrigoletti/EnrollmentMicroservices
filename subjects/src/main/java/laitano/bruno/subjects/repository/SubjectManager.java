@@ -2,7 +2,6 @@ package laitano.bruno.subjects.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import laitano.bruno.entities.Student;
 import laitano.bruno.entities.Subject;
@@ -12,7 +11,6 @@ public class SubjectManager implements SubjectRepository {
     private SubjectJpaItfRep repository;
     private List<String> subCodes;
 
-    @Autowired
     public SubjectManager(SubjectJpaItfRep repository) {
         this.repository = repository;
         this.subCodes = new ArrayList<>();

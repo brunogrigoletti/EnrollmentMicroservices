@@ -4,9 +4,7 @@ import laitano.bruno.entities.Student;
 import laitano.bruno.entities.Subject;
 import laitano.bruno.students.repository.StudentManager;
 import java.util.List;
-import java.util.Map;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/student")
 public class StudentController {
 	private StudentManager stds;
-	//private SubjectManager sm;
 
-	@Autowired
     public StudentController(StudentManager stds) {
         this.stds=stds;
-		//this.sm=sm;
     }
 
 	@GetMapping("/allstudent")
@@ -59,18 +54,6 @@ public class StudentController {
 		else
 			return "Unsuccessful";
 	}
-
-	/* @PostMapping("/register/subject")
-	public String registerStudentSubject(@RequestBody Map<String, String> request) {
-		String studentId = request.get("studentId");
-		String subjectId = request.get("subjectId");
-		Student student = stds.getStudentId(studentId);
-		Subject subject = sm.getSubjectId(subjectId);
-		if (sm.addStudent(student, subject))
-			return "Successful";
-		else
-			return "Unsuccessful";
-	} */
 
 	@DeleteMapping("/delete/{regdNum}")
 	public String deleteStudentRecord(@PathVariable("regdNum") String regdNum) {
