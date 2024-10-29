@@ -1,0 +1,30 @@
+services:
+  commons:
+    build:
+      context: ./commons
+      dockerfile: dockerfile
+      tags: ["commons"]
+    ports:
+      - 8080:8080
+
+  students:
+    depends_on:
+        commons:
+          condition: service_started
+    build:
+      context: ./students
+      dockerfile: dockerfile
+      tags: ["students"]
+    ports:
+      - 8081:8081
+
+  subjects:
+    depends_on:
+        commons:
+          condition: service_started
+    build:
+      context: ./subjects
+      dockerfile: dockerfile
+      tags: ["subjects"]
+    ports:
+      - 8082:8082

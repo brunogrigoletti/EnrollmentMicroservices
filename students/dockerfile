@@ -1,0 +1,4 @@
+FROM openjdk:17
+WORKDIR /enrollment
+COPY ./target/students-0.0.1-SNAPSHOT.jar .
+CMD ["java", "-jar", "students-0.0.1-SNAPSHOT.jar"]
