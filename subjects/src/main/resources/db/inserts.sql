@@ -1,2 +1,0 @@
-INSERT INTO Subject (code, name, schedule, course) VALUES ('SUBJ101', 'Matemática Básica', 'A', 'MB101');
-INSERT INTO Subject (code, name, schedule, course) VALUES ('SUBJ102', 'Introdução à Física', 'B', 'IF102');

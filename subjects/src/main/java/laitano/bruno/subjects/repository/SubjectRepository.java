@@ -9,6 +9,6 @@ public interface SubjectRepository {
     boolean addStudent(Student std, Subject sub);
     boolean deleteSubject(String code);
     List<Subject> getSubjects();
-    Subject getSubjectId(String id);
+    Subject getSubjectCode(String id);
     List<Student> getStudentsByClass(String classCode);
 }

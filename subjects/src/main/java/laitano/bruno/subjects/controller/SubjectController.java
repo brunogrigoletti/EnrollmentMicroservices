@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/subject")
@@ -35,23 +35,21 @@ public class SubjectController {
 		return sm.getSubjects();
 	}
 
+	@GetMapping("/subjectbycode/{code}")
+	public Subject getSubjectByCode(@PathVariable("code") String code) {
+		return sm.getSubjectCode(code);
+	}
+
 	@GetMapping("/student/{classCode}")
 	public List<Student> getStudentsByClass(@PathVariable("classCode") String code) {
 		return sm.getStudentsByClass(code);
 	}
 
-	private Student consumeStudent(String regNum) {
-        RestTemplate restTemplate = new RestTemplate();
-        String endpoint = "http://localhost:8081/studentbyid/{regNum}";
-        return restTemplate.getForObject(endpoint, Student.class, regNum);
-    }
-
-	@PostMapping("/register/subject")
-	public String registerStudentSubject(@RequestBody Map<String, String> request) {
-		String studentId = request.get("studentId");
-		String subjectId = request.get("subjectId");
-		Student student = consumeStudent(studentId);
-		Subject subject = sm.getSubjectId(subjectId);
+	@PostMapping("/enroll")
+	public String registerStudentSubject(@RequestBody Map<String, Object> request) {
+		ObjectMapper mapper = new ObjectMapper();
+		Student student = mapper.convertValue(request.get("student"), Student.class);
+		Subject subject = mapper.convertValue(request.get("subject"), Subject.class);
 		if (sm.addStudent(student, subject))
 			return "Successful";
 		else

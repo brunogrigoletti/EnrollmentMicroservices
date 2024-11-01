@@ -37,6 +37,7 @@ public class MainWindow {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLayout(new BorderLayout());
         window.add(buttons,BorderLayout.CENTER);
+        window.setResizable(false);
         window.setVisible(true);
     }
 
@@ -69,11 +70,43 @@ public class MainWindow {
             }
         });
 
+        b2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NewSubject ns = new NewSubject();
+                ns.run();
+            }
+        });
+
+        b3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Enroll en = new Enroll();
+                en.run();
+            }
+        });
+
         b4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 StudentsList sl = new StudentsList();
                 sl.run();
+            }
+        });
+
+        b5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StudentById sId = new StudentById();
+                sId.run();
+            }
+        });
+
+        b6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StudentByNamePart sNp = new StudentByNamePart();
+                sNp.run();
             }
         });
     }

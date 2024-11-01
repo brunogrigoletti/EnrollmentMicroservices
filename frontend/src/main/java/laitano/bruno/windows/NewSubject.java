@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -14,21 +15,23 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import laitano.bruno.entities.Student;
+import laitano.bruno.entities.Subject;
 
-public class NewStudent {
+public class NewSubject {
     private JFrame window;
     private JPanel fieldsPanel, buttonsPanel;
-    private JTextField nameField, documentField, addressField;
+    private JTextField codeField, nameField, classField;
     private JButton bAdd, bCancel;
+    private JComboBox<String> scheduleBox;
 
-    public NewStudent() {
+    public NewSubject() {
         this.window = new JFrame();
         this.fieldsPanel = new JPanel();
         this.buttonsPanel = new JPanel();
+        this.codeField = new JTextField();
         this.nameField = new JTextField();
-        this.documentField = new JTextField();
-        this.addressField = new JTextField();
+        this.scheduleBox = new JComboBox<>();
+        this.classField = new JTextField();
         this.bAdd = new JButton();
         this.bCancel = new JButton();
     }
@@ -37,11 +40,12 @@ public class NewStudent {
         setWindow();
         setFields();
         setButtons();
+        setScheduleBox();
         actions();
     }
 
     private void setWindow() {
-        this.window = new JFrame("New Student");
+        this.window = new JFrame("New Subject");
         window.setSize(400, 300);
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.setLayout(new BorderLayout());
@@ -52,16 +56,19 @@ public class NewStudent {
     }
 
     private void setFields() {
-        fieldsPanel.setLayout(new GridLayout(3, 2, 10, 10));
-        fieldsPanel.add(new JLabel("Name:"));
+        fieldsPanel.setLayout(new GridLayout(4, 2, 10, 10));
+        fieldsPanel.add(new JLabel("Code:"));
+        codeField.setColumns(10);
+        fieldsPanel.add(codeField);
+        fieldsPanel.add(new JLabel("Subject:"));
         nameField.setColumns(10);
         fieldsPanel.add(nameField);
-        fieldsPanel.add(new JLabel("Document:"));
-        documentField.setColumns(10);
-        fieldsPanel.add(documentField);
-        fieldsPanel.add(new JLabel("Address:"));
-        addressField.setColumns(10);
-        fieldsPanel.add(addressField);
+        fieldsPanel.add(new JLabel("Schedule Code:"));
+        fieldsPanel.add(scheduleBox);
+        fieldsPanel.add(new JLabel("Class Code:"));
+        classField.setColumns(10);
+        fieldsPanel.add(classField);
+
     }
 
     private void setButtons() {
@@ -72,27 +79,39 @@ public class NewStudent {
         buttonsPanel.add(bCancel);
     }
 
+    private void setScheduleBox() {
+        scheduleBox.addItem("A");
+        scheduleBox.addItem("B");
+        scheduleBox.addItem("C");
+        scheduleBox.addItem("D");
+        scheduleBox.addItem("E");
+        scheduleBox.addItem("F");
+        scheduleBox.addItem("G");
+        scheduleBox.setSelectedIndex(-1);
+    }
+
     private void resetFields() {
+        codeField.setText("");
         nameField.setText("");
-        documentField.setText("");
-        addressField.setText("");
+        scheduleBox.setSelectedIndex(-1);
+        classField.setText("");
     }
 
     private boolean fieldsEmpty() {
-        if (nameField.getText().trim().isEmpty() || addressField.getText().trim().isEmpty()
-            || documentField.getText().trim().isEmpty()) {
+        if (codeField.getText().trim().isEmpty() || nameField.getText().trim().isEmpty()
+            || scheduleBox.getSelectedItem() == null || classField.getText().trim().isEmpty()) {
                 return true;
             }
         return false;
     }
 
 
-    public String registerStudent(Student student) {
+    public String registerSubject(Subject subject) {
         RestTemplate restTemplate = new RestTemplate();
-        String endpoint = "http://localhost:8081/student/register";
+        String endpoint = "http://localhost:8082/subject/register";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Student> request = new HttpEntity<>(student, headers);
+        HttpEntity<Subject> request = new HttpEntity<>(subject, headers);
         return restTemplate.postForObject(endpoint, request, String.class);
     }
 
@@ -101,9 +120,10 @@ public class NewStudent {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!fieldsEmpty()){
-                    Student newStudent = new Student(nameField.getText(),
-                    addressField.getText(),documentField.getText());
-                    String response = registerStudent(newStudent);
+                    String boxOption = scheduleBox.getSelectedItem().toString();
+                    Subject newSubject = new Subject(codeField.getText(),
+                    nameField.getText(),boxOption,classField.getText());
+                    String response = registerSubject(newSubject);
                     JOptionPane.showMessageDialog(window, response);
                     resetFields();
                 }

@@ -4,29 +4,24 @@ import laitano.bruno.entities.Student;
 import laitano.bruno.entities.Subject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentManager implements StudentRepository {
 	private StudentJpaItfRep repository;
-	private List<String> stdCodes;
 
     public StudentManager(StudentJpaItfRep repository) {
         this.repository = repository;
-		this.stdCodes = new ArrayList<>();
     }
 
 	@Override
 	public boolean add(Student std) {
-		if (stdCodes.contains(std.getRn())) {
-            return false;
-        }
-		Random random = new Random();
-        int regNum = 10000 + random.nextInt(90000);
-		String rn = String.valueOf(regNum);
-		std.setRn(rn);
-		stdCodes.add(rn);
+		List<Student> stds = repository.findAll();
+		for(int i=0; i<stds.size(); i++){
+			if(stds.get(i).getRn().equalsIgnoreCase(std.getRn())) {
+				return false;
+			}
+		}
 		repository.save(std);
 		return true;
 	}

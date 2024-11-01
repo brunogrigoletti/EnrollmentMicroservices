@@ -38,7 +38,7 @@ public class SubjectManager implements SubjectRepository {
     }
 
     @Override
-    public Subject getSubjectId(String code) {
+    public Subject getSubjectCode(String code) {
         List<Subject> subj = repository.findAll();
         for (Subject subject : subj) {
             if (subject.getCode().equalsIgnoreCase(code)) {

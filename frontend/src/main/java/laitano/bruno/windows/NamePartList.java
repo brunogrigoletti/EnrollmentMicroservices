@@ -16,17 +16,19 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import laitano.bruno.entities.Student;
 
-public class StudentsList {
+public class NamePartList {
     private JFrame window;
     private JPanel buttonPanel;
     private JButton bClose;
     private JList<String> students;
+    private String namePart;
 
-    public StudentsList() {
+    public NamePartList(String namePart) {
         this.window = new JFrame();
         this.buttonPanel = new JPanel();
         this.bClose = new JButton();
         this.students = new JList<>();
+        this.namePart = namePart;
     }
 
     public void run() {
@@ -48,7 +50,7 @@ public class StudentsList {
     }
 
     private void setList() {
-        List<Student> studentList = consumeStudent();
+        List<Student> studentList = searchStudent();
         DefaultListModel<String> model = new DefaultListModel<>();
         for (Student student : studentList) {
             model.addElement("(" + student.getRn() + ") - " + student.getName());
@@ -57,9 +59,9 @@ public class StudentsList {
         students.setVisibleRowCount(10);
     }
 
-    private List<Student> consumeStudent() { 
+    private List<Student> searchStudent() { 
         RestTemplate restTemplate = new RestTemplate();
-        String endpoint = "http://localhost:8081/student/allstudent";
+        String endpoint = "http://localhost:8081/student/studentbynamepart/" + namePart;
         return restTemplate.exchange(
             endpoint,
             HttpMethod.GET,
