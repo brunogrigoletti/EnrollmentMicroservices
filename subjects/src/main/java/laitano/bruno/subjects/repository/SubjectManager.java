@@ -10,10 +10,12 @@ import laitano.bruno.entities.Subject;
 public class SubjectManager implements SubjectRepository {
     private SubjectJpaItfRep repository;
     private List<String> subCodes;
+    private List<String> classCodes;
 
     public SubjectManager(SubjectJpaItfRep repository) {
         this.repository = repository;
         this.subCodes = new ArrayList<>();
+        this.classCodes = new ArrayList<>();
     }
 
     @Override
@@ -22,6 +24,7 @@ public class SubjectManager implements SubjectRepository {
             return false;
         }
         Subject subject = new Subject(code, name, schedule, classCode);
+        classCodes.add(classCode);
         subCodes.add(code);
         repository.save(subject);
         return true;
@@ -46,6 +49,15 @@ public class SubjectManager implements SubjectRepository {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<String> getClassCodes() {
+        if (!classCodes.isEmpty()) {
+            return classCodes;
+        }
+        else
+            return null;
     }
 
     @Override

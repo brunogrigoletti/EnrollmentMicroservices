@@ -40,6 +40,11 @@ public class SubjectController {
 		return sm.getSubjectCode(code);
 	}
 
+	@GetMapping("/allclasscodes")
+	public List<String> getAllClassCodes() {
+		return sm.getClassCodes();
+	}
+
 	@GetMapping("/student/{classCode}")
 	public List<Student> getStudentsByClass(@PathVariable("classCode") String code) {
 		return sm.getStudentsByClass(code);

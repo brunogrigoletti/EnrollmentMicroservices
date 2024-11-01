@@ -2,10 +2,18 @@ package laitano.bruno.windows;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import laitano.bruno.entities.Student;
+import laitano.bruno.entities.Subject;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.BorderLayout;
 
 public class MainWindow {
@@ -61,6 +69,30 @@ public class MainWindow {
         buttons.add(b8);
     }
 
+    private List<Student> fetchAllStudents() {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8081/student/allstudent";
+        ResponseEntity<List<Student>> response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Student>>() {}
+        );
+        return response.getBody();
+    }
+
+    private List<Subject> fetchAllSubjects() {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8082/subject/allsubjects";
+        ResponseEntity<List<Subject>> response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Subject>>() {}
+        );
+        return response.getBody();
+    }
+
     private void actions() {
         b1.addActionListener(new ActionListener() {
             @Override
@@ -81,32 +113,60 @@ public class MainWindow {
         b3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Enroll en = new Enroll();
-                en.run();
+                if (fetchAllStudents().isEmpty()) {
+                    JOptionPane.showMessageDialog(window, "No students yet!",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                if (fetchAllSubjects().isEmpty()) {
+                    JOptionPane.showMessageDialog(window, "No subjects yet!",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    Enroll en = new Enroll();
+                    en.run();
+                }
             }
         });
 
         b4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                StudentsList sl = new StudentsList();
-                sl.run();
+                if (fetchAllStudents().isEmpty()) {
+                    JOptionPane.showMessageDialog(window, "No students yet!",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                else{
+                    StudentsList sl = new StudentsList();
+                    sl.run();
+                }
             }
         });
 
         b5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                StudentById sId = new StudentById();
-                sId.run();
+                if (fetchAllStudents().isEmpty()) {
+                    JOptionPane.showMessageDialog(window, "No students yet!",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    StudentById sId = new StudentById();
+                    sId.run();
+                }
             }
         });
 
         b6.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                StudentByNamePart sNp = new StudentByNamePart();
-                sNp.run();
+                if (fetchAllStudents().isEmpty()) {
+                    JOptionPane.showMessageDialog(window, "No students yet!",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    StudentByNamePart sNp = new StudentByNamePart();
+                    sNp.run();
+                }
             }
         });
     }

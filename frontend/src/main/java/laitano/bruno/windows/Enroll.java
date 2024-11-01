@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,9 +15,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import laitano.bruno.entities.Student;
 import laitano.bruno.entities.Subject;
 
@@ -78,8 +82,22 @@ public class Enroll {
     }
 
     private void setClassBox() {
-        classBox.addItem("A");
+        for (String c : fetchClassCodes()) {
+            classBox.addItem(c);
+        }
         classBox.setSelectedIndex(-1);
+    }
+
+    private List<String> fetchClassCodes() {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8082/subject/allclasscodes";
+        ResponseEntity<List<String>> response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<String>>() {}
+        );
+        return response.getBody();
     }
 
     private void resetFields() {

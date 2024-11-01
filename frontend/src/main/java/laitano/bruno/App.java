@@ -1,8 +1,8 @@
-package laitano.bruno.main;
+package laitano.bruno;
 
 import laitano.bruno.windows.MainWindow;
 
-public class Main {
+public class App {
     public static void main(String[] args) {
         MainWindow mw = new MainWindow();
         mw.run();
