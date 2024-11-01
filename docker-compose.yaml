@@ -1,12 +1,13 @@
 services:
-  commons:
-    build:
-      context: ./commons
-      dockerfile: dockerfile
-      tags: ["commons"]
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: postgres  
     ports:
-      - 8080:8080
-
+      - 5432:5432
+      
   students:
     depends_on:
         commons:
