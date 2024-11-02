@@ -7,6 +7,14 @@ services:
       POSTGRES_DB: postgres  
     ports:
       - 5432:5432
+
+  commons:
+    build:
+      context: ./commons
+      dockerfile: dockerfile
+      tags: ["commons"]
+    ports:
+      - 8080:8080
       
   students:
     depends_on:
