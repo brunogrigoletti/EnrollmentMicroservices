@@ -25,9 +25,9 @@ public class SubjectController {
 	@PostMapping("/register")
 	public String registerSubject(@RequestBody Subject subject) {
 		if (sm.add(subject.getCode(), subject.getName(), subject.getSchedule(), subject.getCourse()))
-			return "Successful";
+			return "Successful!";
 		else
-			return "Unsuccessful";
+			return "Unsuccessful!";
 	}
 
 	@GetMapping("/allsubjects")
@@ -56,8 +56,8 @@ public class SubjectController {
 		Student student = mapper.convertValue(request.get("student"), Student.class);
 		Subject subject = mapper.convertValue(request.get("subject"), Subject.class);
 		if (sm.addStudent(student, subject))
-			return "Successful";
+			return "Successful!";
 		else
-			return "Unsuccessful";
+			return "Unsuccessful!";
 	}
 }

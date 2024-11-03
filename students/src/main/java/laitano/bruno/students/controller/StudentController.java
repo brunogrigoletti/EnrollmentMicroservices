@@ -50,9 +50,9 @@ public class StudentController {
 	@PostMapping("/register")
 	public String registerStudent(@RequestBody Student student) {
 		if (stds.add(student))
-			return "Successful";
+			return "Successful!";
 		else
-			return "Unsuccessful";
+			return "Unsuccessful!";
 	}
 
 	@DeleteMapping("/delete/{regdNum}")

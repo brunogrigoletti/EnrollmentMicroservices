@@ -34,10 +34,10 @@ public class StudentManager implements StudentRepository {
 			Student stdn = stds.get(i);
 			if(stdn.getRn().equals(std.getRn())) {
 				stds.set(i, std);
-				return "Update successful";
+				return "Update successful!";
 			}
 		}
-		return "Update un-successful";
+		return "Update un-successful!";
 	}
 
 	@Override
@@ -48,10 +48,10 @@ public class StudentManager implements StudentRepository {
 			Student stdn = stds.get(i);
 			if(stdn.getRn().equals(registrationNumber)){
 				stds.remove(i);
-				return "Delete successful";
+				return "Delete successful!";
 			}
 		}
-		return "Delete un-successful";
+		return "Delete un-successful!";
 	}
 
 	@Override

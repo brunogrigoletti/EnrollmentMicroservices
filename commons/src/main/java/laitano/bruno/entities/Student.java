@@ -13,11 +13,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 public class Student implements Serializable {
 	@Id
+	@Column(nullable = false, unique = true)
     private String rn;
     private String name;
     private String address;
 	private String document;
-	private Random random;
 	private Set<String> generatedNumbers;
 	@ManyToMany (mappedBy="students")
 	private List<Subject> subjects;
@@ -26,7 +26,6 @@ public class Student implements Serializable {
 	}
 					
 	public Student(String name, String address, String document) {
-		this.random = new Random();
 		this.generatedNumbers = new HashSet<>();
 		this.rn = generateRn();
 		this.name = name;
@@ -38,7 +37,7 @@ public class Student implements Serializable {
 	private String generateRn() {
         String regNum;
         do {
-            int randomNumber = random.nextInt(1_000_000);
+            int randomNumber = new Random().nextInt(1_000_000);
             regNum = String.format("%06d", randomNumber);
         } while (generatedNumbers.contains(regNum));
         generatedNumbers.add(regNum);

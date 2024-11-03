@@ -117,7 +117,7 @@ public class MainWindow {
                     JOptionPane.showMessageDialog(window, "No students yet!",
                         "Warning", JOptionPane.WARNING_MESSAGE);
                 }
-                if (fetchAllSubjects().isEmpty()) {
+                else if (fetchAllSubjects().isEmpty()) {
                     JOptionPane.showMessageDialog(window, "No subjects yet!",
                         "Warning", JOptionPane.WARNING_MESSAGE);
                 }
