@@ -1,11 +1,4 @@
 services:
-  commons:
-    build:
-      context: ./commons
-      dockerfile: dockerfile
-    ports:
-      - 8080:8080
-
   database:
     image: postgres:latest
     environment:
@@ -25,7 +18,7 @@ services:
       database:
         condition: service_started
     ports:
-      - 8082:8082
+      - 8082:8080
 
   students:
     build:
@@ -35,4 +28,4 @@ services:
       database:
         condition: service_started
     ports:
-      - 8081:8081
+      - 8081:8080

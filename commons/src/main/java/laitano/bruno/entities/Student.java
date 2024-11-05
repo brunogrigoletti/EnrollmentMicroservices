@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 public class Student implements Serializable {
 	@Id
-	@Column(nullable = false, unique = true)
     private String rn;
     private String name;
     private String address;
