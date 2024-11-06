@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Student implements Serializable {
@@ -26,11 +24,11 @@ public class Student implements Serializable {
 					
 	public Student(String name, String address, String document) {
 		this.generatedNumbers = new HashSet<>();
-		this.rn = generateRn();
 		this.name = name;
 		this.address = address;
 		this.document = document;
 		this.subjects = new ArrayList<>();
+		this.rn = generateRn();
 	}
 
 	private String generateRn() {
@@ -83,16 +81,8 @@ public class Student implements Serializable {
 		this.subjects = subjects;
 	}
 
-	@JsonProperty("subjects")
-    public List<String> getSubjectNames() {
-        return subjects.stream()
-                       .map(Subject::getName)
-                       .collect(Collectors.toList());
-    }
-
 	@Override
 	public String toString() {
-		return "Student [rn=" + rn + ", name=" + name + ", address=" + address + ", document=" + document
-				+ ", subjects=" + subjects + "]";
+		return "(" + rn + ") - " + name;
 	}
 }

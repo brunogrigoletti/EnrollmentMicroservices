@@ -29,7 +29,7 @@ public class Enroll {
     private JPanel fieldsPanel, buttonsPanel;
     private JTextField registrationNumberField, subjectCodeField;
     private JButton bAdd, bCancel;
-    private JComboBox<String> classBox;
+    private JComboBox<String> classesBox;
 
     public Enroll() {
         this.window = new JFrame();
@@ -37,7 +37,7 @@ public class Enroll {
         this.buttonsPanel = new JPanel();
         this.registrationNumberField = new JTextField();
         this.subjectCodeField = new JTextField();
-        this.classBox = new JComboBox<>();
+        this.classesBox = new JComboBox<>();
         this.bAdd = new JButton();
         this.bCancel = new JButton();
     }
@@ -67,10 +67,10 @@ public class Enroll {
         registrationNumberField.setColumns(10);
         fieldsPanel.add(registrationNumberField);
         fieldsPanel.add(new JLabel("Subject Code:"));
-        subjectCodeField.setColumns(10);
+subjectCodeField.setColumns(10);
         fieldsPanel.add(subjectCodeField);
         fieldsPanel.add(new JLabel("Class Code:"));
-        fieldsPanel.add(classBox);
+        fieldsPanel.add(classesBox);
     }
 
     private void setButtons() {
@@ -83,9 +83,23 @@ public class Enroll {
 
     private void setClassBox() {
         for (String c : fetchClassCodes()) {
-            classBox.addItem(c);
+            classesBox.addItem(c);
         }
-        classBox.setSelectedIndex(-1);
+        classesBox.setSelectedIndex(-1);
+    }
+
+    private void resetFields() {
+        registrationNumberField.setText("");
+        subjectCodeField.setText("");
+        classesBox.setSelectedIndex(-1);
+    }
+
+    private boolean fieldsEmpty() {
+        if (registrationNumberField.getText().trim().isEmpty() || subjectCodeField.getText().trim().isEmpty()
+            || classesBox.getSelectedItem() == null) {
+                return true;
+            }
+        return false;
     }
 
     private List<String> fetchClassCodes() {
@@ -98,20 +112,6 @@ public class Enroll {
             new ParameterizedTypeReference<List<String>>() {}
         );
         return response.getBody();
-    }
-
-    private void resetFields() {
-        registrationNumberField.setText("");
-        subjectCodeField.setText("");
-        classBox.setSelectedIndex(-1);
-    }
-
-    private boolean fieldsEmpty() {
-        if (registrationNumberField.getText().trim().isEmpty() || subjectCodeField.getText().trim().isEmpty()
-            || classBox.getSelectedItem() == null) {
-                return true;
-            }
-        return false;
     }
     
     private String enrollStudent(Student student, Subject subject) {

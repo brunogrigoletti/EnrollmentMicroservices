@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Subject implements Serializable {
@@ -68,16 +66,8 @@ public class Subject implements Serializable {
         this.students = students;
     }
 
-    @JsonProperty("students")
-    public List<String> getSubjectNames() {
-        return students.stream()
-                       .map(Student::getName)
-                       .collect(Collectors.toList());
-    }
-
     @Override
     public String toString() {
-        return "Subject [code=" + code + ", name=" + name + ", schedule=" + schedule + ", course=" + course
-                + ", students=" + students + "]";
+        return "(" + code + ") - " + name;
     }
 }

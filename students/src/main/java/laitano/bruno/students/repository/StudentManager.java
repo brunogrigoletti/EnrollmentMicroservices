@@ -18,7 +18,8 @@ public class StudentManager implements StudentRepository {
 	public boolean add(Student std) {
 		List<Student> stds = repository.findAll();
 		for(int i=0; i<stds.size(); i++){
-			if(stds.get(i).getRn().equalsIgnoreCase(std.getRn())) {
+			if(stds.get(i).getRn().equalsIgnoreCase(std.getRn())
+				&& stds.get(i).getDocument().equalsIgnoreCase(std.getDocument())) {
 				return false;
 			}
 		}

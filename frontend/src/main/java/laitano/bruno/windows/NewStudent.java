@@ -86,8 +86,7 @@ public class NewStudent {
         return false;
     }
 
-
-    public String registerStudent(Student student) {
+    private String registerStudent(Student student) {
         RestTemplate restTemplate = new RestTemplate();
         String endpoint = "http://localhost:8081/student/register";
         HttpHeaders headers = new HttpHeaders();

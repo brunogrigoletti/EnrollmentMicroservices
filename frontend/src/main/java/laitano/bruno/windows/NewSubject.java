@@ -105,8 +105,7 @@ public class NewSubject {
         return false;
     }
 
-
-    public String registerSubject(Subject subject) {
+    private String registerSubject(Subject subject) {
         RestTemplate restTemplate = new RestTemplate();
         String endpoint = "http://localhost:8082/subject/register";
         HttpHeaders headers = new HttpHeaders();

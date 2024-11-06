@@ -15,56 +15,76 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import laitano.bruno.entities.Student;
+import laitano.bruno.entities.Subject;
 
-public class StudentsList {
+public class SubjectsList {
     private JFrame window;
     private JPanel buttonPanel;
     private JButton bClose;
-    private JList<String> students;
+    private JList<String> subjects;
 
-    public StudentsList() {
+    public SubjectsList() {
         this.window = new JFrame();
         this.buttonPanel = new JPanel();
         this.bClose = new JButton();
-        this.students = new JList<>();
+        this.subjects = new JList<>();
     }
 
-    public void run() {
+    public void runAll() {
         setWindow();
-        setList();
+        setListAll();
+        setButton();
+        actions();
+    }
+
+    public void runByStudent(Student std) {
+        setWindow();
+        setListByStudent(std);
         setButton();
         actions();
     }
 
     private void setWindow() {
-        window.setName("Students List");
+        window.setName("Subjects List");
         window.setSize(400, 300);
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.setLayout(new BorderLayout());
-        window.add(new JScrollPane(students), BorderLayout.CENTER);
+        window.add(new JScrollPane(subjects), BorderLayout.CENTER);
         window.add(buttonPanel, BorderLayout.SOUTH);
         window.setResizable(false);
         window.setVisible(true);
     }
 
-    private void setList() {
-        List<Student> studentList = fetchAllStudents();
+    private void setListAll() {
+        List<Subject> subjectsList = fetchAllSubjects();
         DefaultListModel<String> model = new DefaultListModel<>();
-        for (Student student : studentList) {
-            model.addElement("(" + student.getRn() + ") - " + student.getName());
+        for (Subject subject : subjectsList) {
+            model.addElement("(" + subject.getCode() + ") - " + subject.getName());
         }
-        students.setModel(model);
-        students.setVisibleRowCount(10);
+        subjects.setModel(model);
+        subjects.setVisibleRowCount(10);
     }
 
-    private List<Student> fetchAllStudents() { 
+    private void setListByStudent(Object std) {
+        List<Subject> subjectsList = fetchAllSubjects();
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (Subject subject : subjectsList) {
+            if (subject.getStudents().contains(std)){
+                model.addElement("(" + subject.getCode() + ") - " + subject.getName());
+            }
+        }
+        subjects.setModel(model);
+        subjects.setVisibleRowCount(10);
+    }
+
+    private List<Subject> fetchAllSubjects() { 
         RestTemplate restTemplate = new RestTemplate();
-        String endpoint = "http://localhost:8081/student/allstudent";
+        String endpoint = "http://localhost:8082/subject/allsubjects";
         return restTemplate.exchange(
             endpoint,
             HttpMethod.GET,
             null,
-            new ParameterizedTypeReference<List<Student>>() {}
+            new ParameterizedTypeReference<List<Subject>>() {}
         ).getBody();
     }
 

@@ -4,39 +4,44 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import laitano.bruno.entities.Student;
 
-public class StudentById {
+public class SubjectsByStudent {
     private JFrame window;
     private JPanel fieldsPanel, buttonsPanel;
-    private JTextField codeField;
     private JButton bSearch, bCancel;
+    private JComboBox<Student> studentsBox;
 
-    public StudentById() {
+    public SubjectsByStudent() {
         this.window = new JFrame();
         this.fieldsPanel = new JPanel();
         this.buttonsPanel = new JPanel();
-        this.codeField = new JTextField();
         this.bSearch = new JButton();
         this.bCancel = new JButton();
+        this.studentsBox = new JComboBox<>();
     }
 
     public void run() {
         setWindow();
         setFields();
         setButtons();
+        setStudentBox();
         actions();
     }
 
     private void setWindow() {
-        window.setName("Student by ID");
+        window.setName("Subjects by student");
         window.setSize(300, 150);
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.setLayout(new BorderLayout());
@@ -48,9 +53,8 @@ public class StudentById {
 
     private void setFields() {
         fieldsPanel.setLayout(new GridLayout(1, 2, 10, 10));
-        fieldsPanel.add(new JLabel("Registration Number:"));
-        codeField.setColumns(15);
-        fieldsPanel.add(codeField);
+        fieldsPanel.add(new JLabel("Student:"));
+        fieldsPanel.add(studentsBox);
     }
 
     private void setButtons() {
@@ -61,32 +65,41 @@ public class StudentById {
         buttonsPanel.add(bCancel);
     }
 
-    private Student searchStudent(String regNum) {
+    private void setStudentBox() {
+        for (Student s : fetchAllStudents()) {
+            studentsBox.addItem(s);
+        }
+        studentsBox.setSelectedIndex(-1);
+    }
+
+    private List<Student> fetchAllStudents() {
         RestTemplate restTemplate = new RestTemplate();
-        String endpoint = "http://localhost:8081/student/studentbyid/" + regNum;
-        return restTemplate.getForObject(endpoint, Student.class);
+        String url = "http://localhost:8081/student/allstudent";
+        ResponseEntity<List<Student>> response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Student>>() {}
+        );
+        return response.getBody();
     }
 
     private void actions() {
         bSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!codeField.getText().trim().isEmpty()){
-                    Student std = searchStudent(codeField.getText());
-                    if (std!=null){
-                        String studentInfo = String.format("Registration Number: %s\nName: %s\nAddress: %s",
-                        std.getRn(), std.getName(), std.getAddress());
-                        JOptionPane.showMessageDialog(window, studentInfo, "Student Information",
-                            JOptionPane.INFORMATION_MESSAGE);
+                if (studentsBox.getSelectedItem() != null){
+                    SubjectsList sl = new SubjectsList();
+                    for (Student s : fetchAllStudents()) {
+                        if (s.equals(studentsBox.getSelectedItem())){
+                            System.out.println("oi" + s.toString());
+                            sl.runByStudent(s);
+                        }
                     }
-                    else {
-                        JOptionPane.showMessageDialog(window, "Student not found!",
-                            "Warning", JOptionPane.WARNING_MESSAGE);
-                    }
-                    codeField.setText("");
+                    studentsBox.setSelectedIndex(-1);
                 }
                 else {
-                    JOptionPane.showMessageDialog(window, "Field is empty!",
+                    JOptionPane.showMessageDialog(window, "Choose a student!",
                         "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
