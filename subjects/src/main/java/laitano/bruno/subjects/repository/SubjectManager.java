@@ -3,7 +3,6 @@ package laitano.bruno.subjects.repository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
-
 import jakarta.transaction.Transactional;
 import laitano.bruno.entities.Student;
 import laitano.bruno.entities.Subject;
