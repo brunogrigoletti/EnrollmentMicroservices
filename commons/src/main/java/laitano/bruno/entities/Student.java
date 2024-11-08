@@ -7,9 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "rn")
 public class Student implements Serializable {
 	@Id
     private String rn;
@@ -17,13 +19,12 @@ public class Student implements Serializable {
     private String address;
 	private String document;
 	private Set<String> generatedNumbers = new HashSet<>();
-	@JsonIgnore
 	@ManyToMany (mappedBy="students")
 	private List<Subject> subjects = new ArrayList<>();
 	
 	protected Student() {
 	}
-					
+	
 	public Student(String name, String address, String document) {
 		this.name = name;
 		this.address = address;

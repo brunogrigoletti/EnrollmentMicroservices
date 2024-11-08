@@ -193,7 +193,7 @@ public class MainWindow {
                 }
                 else{
                     StudentsList sl = new StudentsList();
-                    sl.run();
+                    sl.runAll();
                 }
             }
         });
@@ -257,7 +257,14 @@ public class MainWindow {
         b9.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                if (fetchAllSubjects().isEmpty()) {
+                    JOptionPane.showMessageDialog(window, "No subjects yet!",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    StudentsBySubject sbs = new StudentsBySubject();
+                    sbs.run();
+                }
             }
         });
 

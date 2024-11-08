@@ -4,16 +4,17 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "code")
 public class Subject implements Serializable {
     @Id
     private String code;
     private String name;
     private String schedule;
     private String course;
-    @JsonIgnore
     @ManyToMany
     private List<Student> students = new ArrayList<>();
 

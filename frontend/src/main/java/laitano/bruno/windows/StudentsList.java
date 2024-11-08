@@ -15,6 +15,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import laitano.bruno.entities.Student;
+import laitano.bruno.entities.Subject;
 
 public class StudentsList {
     private JFrame window;
@@ -29,9 +30,16 @@ public class StudentsList {
         this.students = new JList<>();
     }
 
-    public void run() {
+    public void runAll() {
         setWindow();
-        setList();
+        setListAll();
+        setButton();
+        actions();
+    }
+
+    public void runBySubject(Subject sub) {
+        setWindow();
+        setListBySubject(sub);
         setButton();
         actions();
     }
@@ -47,11 +55,26 @@ public class StudentsList {
         window.setVisible(true);
     }
 
-    private void setList() {
+    private void setListAll() {
         List<Student> studentList = fetchAllStudents();
         DefaultListModel<String> model = new DefaultListModel<>();
         for (Student student : studentList) {
             model.addElement("(" + student.getRn() + ") - " + student.getName());
+        }
+        students.setModel(model);
+        students.setVisibleRowCount(10);
+    }
+
+    private void setListBySubject(Subject sub) {
+        List<Student> studentsList = fetchAllStudents();
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (Student student : studentsList) {
+            for (Subject subject : student.getSubjects()) {
+                if (subject.getCode().equals(sub.getCode())) {
+                    model.addElement("(" + student.getRn() + ") - " + student.getName());
+                    break;
+                }
+            }
         }
         students.setModel(model);
         students.setVisibleRowCount(10);

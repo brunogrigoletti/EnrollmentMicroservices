@@ -69,8 +69,12 @@ public class SubjectsList {
         List<Subject> subjectsList = fetchAllSubjects();
         DefaultListModel<String> model = new DefaultListModel<>();
         for (Subject subject : subjectsList) {
-            if (subject.getStudents().contains(std)){
-                model.addElement("(" + subject.getCode() + ") - " + subject.getName());
+            for (Student student : subject.getStudents()) {
+                if (student.getRn().equals(std.getRn())) {
+                    System.out.println(subject.getCode() + subject.getName());
+                    model.addElement("(" + subject.getCode() + ") - " + subject.getName());
+                    break;
+                }
             }
         }
         subjects.setModel(model);
