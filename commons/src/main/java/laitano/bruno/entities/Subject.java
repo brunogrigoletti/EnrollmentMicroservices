@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Subject implements Serializable {
@@ -12,8 +13,9 @@ public class Subject implements Serializable {
     private String name;
     private String schedule;
     private String course;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany
-    private List<Student> students;
+    private List<Student> students = new ArrayList<>();
 
     protected Subject() {
     }
@@ -23,7 +25,6 @@ public class Subject implements Serializable {
         this.name = name;
         this.schedule = schedule;
         this.course = course;
-        this.students = new ArrayList<>();
     }
 
     public String getCode() {

@@ -5,6 +5,7 @@ import laitano.bruno.entities.Subject;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
 
 @Service
 public class StudentManager implements StudentRepository {
@@ -99,4 +100,10 @@ public class StudentManager implements StudentRepository {
 		}
 		return null;
 	}
+
+	@Override
+	@Transactional
+    public void deleteAllStudents() {
+        repository.deleteAll();
+    }
 }

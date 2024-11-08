@@ -21,7 +21,7 @@ public class SubjectsByStudent {
     private JFrame window;
     private JPanel fieldsPanel, buttonsPanel;
     private JButton bSearch, bCancel;
-    private JComboBox<Student> studentsBox;
+    private JComboBox<String> studentsBox;
 
     public SubjectsByStudent() {
         this.window = new JFrame();
@@ -67,7 +67,7 @@ public class SubjectsByStudent {
 
     private void setStudentBox() {
         for (Student s : fetchAllStudents()) {
-            studentsBox.addItem(s);
+            studentsBox.addItem(s.getRn());
         }
         studentsBox.setSelectedIndex(-1);
     }
@@ -84,24 +84,33 @@ public class SubjectsByStudent {
         return response.getBody();
     }
 
+    private Student searchStudent(String regNum) {
+        RestTemplate restTemplate = new RestTemplate();
+        String endpoint = "http://localhost:8081/student/studentbyid/" + regNum;
+        return restTemplate.getForObject(endpoint, Student.class);
+    }
+
     private void actions() {
         bSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (studentsBox.getSelectedItem() != null){
                     SubjectsList sl = new SubjectsList();
-                    for (Student s : fetchAllStudents()) {
-                        if (s.equals(studentsBox.getSelectedItem())){
-                            System.out.println("oi" + s.toString());
-                            sl.runByStudent(s);
-                        }
+                    Student s = searchStudent(studentsBox.getSelectedItem().toString());
+                    System.out.println(s.getName() + s.getSubjects());
+                    if (!s.getSubjects().isEmpty()){
+                        sl.runByStudent(s);
                     }
-                    studentsBox.setSelectedIndex(-1);
+                    else {
+                        JOptionPane.showMessageDialog(window, "No subjects for this student!",
+                            "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
                 else {
                     JOptionPane.showMessageDialog(window, "Choose a student!",
                         "Warning", JOptionPane.WARNING_MESSAGE);
                 }
+                studentsBox.setSelectedIndex(-1);
             }
         });
 

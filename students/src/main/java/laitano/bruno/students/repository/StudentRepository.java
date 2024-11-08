@@ -12,4 +12,5 @@ public interface StudentRepository {
     Student getStudentId(String id);
     List<Student> getStudentNamePart(String namePart);
     List<Subject> getSubjectsByStudent(String regNum);
+    void deleteAllStudents();
 }

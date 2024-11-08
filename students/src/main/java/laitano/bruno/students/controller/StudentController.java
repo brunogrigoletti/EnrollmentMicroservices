@@ -5,6 +5,7 @@ import laitano.bruno.entities.Subject;
 import laitano.bruno.students.repository.StudentManager;
 import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,4 +60,10 @@ public class StudentController {
 	public String deleteStudentRecord(@PathVariable("regdNum") String regdNum) {
 		return stds.deleteStudent(regdNum);
 	}
+
+	@DeleteMapping("/deleteAll")
+    public ResponseEntity<String> deleteAllStudents() {
+        stds.deleteAllStudents();
+        return ResponseEntity.ok("Data deleted successfully!");
+    }
 }

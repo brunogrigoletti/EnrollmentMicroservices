@@ -13,8 +13,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,16 +28,15 @@ import laitano.bruno.entities.Subject;
 public class Enroll {
     private JFrame window;
     private JPanel fieldsPanel, buttonsPanel;
-    private JTextField registrationNumberField, subjectCodeField;
     private JButton bAdd, bCancel;
-    private JComboBox<String> classesBox;
+    private JComboBox<String> studentsBox, codesBox, classesBox;
 
     public Enroll() {
         this.window = new JFrame();
         this.fieldsPanel = new JPanel();
         this.buttonsPanel = new JPanel();
-        this.registrationNumberField = new JTextField();
-        this.subjectCodeField = new JTextField();
+        this.studentsBox = new JComboBox<>();
+        this.codesBox = new JComboBox<>();
         this.classesBox = new JComboBox<>();
         this.bAdd = new JButton();
         this.bCancel = new JButton();
@@ -46,7 +46,7 @@ public class Enroll {
         setWindow();
         setFields();
         setButtons();
-        setClassBox();
+        setBoxes();
         actions();
     }
 
@@ -63,12 +63,10 @@ public class Enroll {
 
     private void setFields() {
         fieldsPanel.setLayout(new GridLayout(3, 2, 10, 10));
-        fieldsPanel.add(new JLabel("Student Registration Number:"));
-        registrationNumberField.setColumns(10);
-        fieldsPanel.add(registrationNumberField);
+        fieldsPanel.add(new JLabel("Student:"));
+        fieldsPanel.add(studentsBox);
         fieldsPanel.add(new JLabel("Subject Code:"));
-subjectCodeField.setColumns(10);
-        fieldsPanel.add(subjectCodeField);
+        fieldsPanel.add(codesBox);
         fieldsPanel.add(new JLabel("Class Code:"));
         fieldsPanel.add(classesBox);
     }
@@ -81,25 +79,58 @@ subjectCodeField.setColumns(10);
         buttonsPanel.add(bCancel);
     }
 
-    private void setClassBox() {
+    private void setBoxes() {
         for (String c : fetchClassCodes()) {
             classesBox.addItem(c);
         }
+
+        for (Student s : fetchAllStudents()) {
+            studentsBox.addItem(s.getRn());
+        }
+
+        for (Subject s : fetchAllSubjects()) {
+            codesBox.addItem(s.getCode());
+        }
+
+        studentsBox.setSelectedIndex(-1);
+        codesBox.setSelectedIndex(-1);
         classesBox.setSelectedIndex(-1);
     }
 
     private void resetFields() {
-        registrationNumberField.setText("");
-        subjectCodeField.setText("");
+        studentsBox.setSelectedIndex(-1);
+        codesBox.setSelectedIndex(-1);
         classesBox.setSelectedIndex(-1);
     }
 
     private boolean fieldsEmpty() {
-        if (registrationNumberField.getText().trim().isEmpty() || subjectCodeField.getText().trim().isEmpty()
+        if (studentsBox.getSelectedItem() == null || codesBox.getSelectedItem() == null
             || classesBox.getSelectedItem() == null) {
                 return true;
             }
         return false;
+    }
+
+    private List<Student> fetchAllStudents() { 
+        RestTemplate restTemplate = new RestTemplate();
+        String endpoint = "http://localhost:8081/student/allstudent";
+        return restTemplate.exchange(
+            endpoint,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Student>>() {}
+        ).getBody();
+    }
+
+    private List<Subject> fetchAllSubjects() { 
+        RestTemplate restTemplate = new RestTemplate();
+        String endpoint = "http://localhost:8082/subject/allsubjects";
+        return restTemplate.exchange(
+            endpoint,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Subject>>() {}
+        ).getBody();
     }
 
     private List<String> fetchClassCodes() {
@@ -122,6 +153,16 @@ subjectCodeField.setColumns(10);
         Map<String, Object> body = new HashMap<>();
         body.put("student", student);
         body.put("subject", subject);
+
+        String requestBody = null;
+        try {
+            requestBody = new ObjectMapper().writeValueAsString(body);
+            System.out.println("Request Body: " + requestBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "Erro ao processar o JSON: " + e.getMessage();
+        }
+
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
         return restTemplate.postForObject(url, request, String.class);
     }
@@ -143,8 +184,8 @@ subjectCodeField.setColumns(10);
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!fieldsEmpty()){
-                    Student std = searchStudent(registrationNumberField.getText());
-                    Subject sub = searchSubject(subjectCodeField.getText());
+                    Student std = searchStudent(studentsBox.getSelectedItem().toString());
+                    Subject sub = searchSubject(codesBox.getSelectedItem().toString());
                     String response = enrollStudent(std,sub);
                     JOptionPane.showMessageDialog(window, response);
                     resetFields();

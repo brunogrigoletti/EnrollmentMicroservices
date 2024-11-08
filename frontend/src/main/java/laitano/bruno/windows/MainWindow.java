@@ -23,7 +23,7 @@ import java.awt.Color;
 public class MainWindow {
     private JFrame window;
     private JPanel buttons;
-    private JButton b1, b2, b3, b4, b5, b6, b7, b8, b9, b10;
+    private JButton b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12;
 
     public MainWindow() {
         this.window = new JFrame("Enrollment System");
@@ -38,6 +38,8 @@ public class MainWindow {
         this.b8 = new JButton();
         this.b9 = new JButton();
         this.b10 = new JButton();
+        this.b11 = new JButton();
+        this.b12 = new JButton();
     }
 
     public void run() {
@@ -56,7 +58,7 @@ public class MainWindow {
     }
 
     private void setButtons() {
-        buttons.setLayout(new GridLayout(5, 2, 10, 10));
+        buttons.setLayout(new GridLayout(6, 2, 10, 10));
         b1.setText("New student");
         buttons.add(b1);
         b2.setText("New subject");
@@ -77,8 +79,16 @@ public class MainWindow {
         buttons.add(b9);
         b10.setText("Load data");
         b10.setForeground(Color.WHITE);
-        b10.setBackground(Color.darkGray);
+        b10.setBackground(Color.GREEN);
         buttons.add(b10);
+        b11.setText("Delete data");
+        b11.setForeground(Color.WHITE);
+        b11.setBackground(Color.RED);
+        buttons.add(b11);
+        b12.setText("Close");
+        b12.setForeground(Color.WHITE);
+        b12.setBackground(Color.darkGray);
+        buttons.add(b12);
     }
 
     private List<Student> fetchAllStudents() {
@@ -121,6 +131,22 @@ public class MainWindow {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Subject> request = new HttpEntity<>(subject, headers);
         return restTemplate.postForObject(endpoint, request, String.class);
+    }
+
+    private String deleteAllStudents() {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8081/student/deleteAll";
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE,
+            HttpEntity.EMPTY, String.class);
+        return response.getBody();
+    }
+
+    private String deleteAllSubjects() {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8082/subject/deleteAll";
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE,
+            HttpEntity.EMPTY, String.class);
+        return response.getBody();
     }
 
     private void actions() {
@@ -246,6 +272,27 @@ public class MainWindow {
                 registerSubject(sb1);
                 Subject sb2 = new Subject("SUBJ102", "Introdução à Física", "B", "IF102");
                 registerSubject(sb2);
+            }
+        });
+
+        b11.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (fetchAllStudents().isEmpty() && fetchAllSubjects().isEmpty()) {
+                    JOptionPane.showMessageDialog(window, "No data yet!",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    deleteAllStudents();
+                    deleteAllSubjects();
+                }
+            }
+        });
+
+        b12.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                window.dispose();
             }
         });
     }

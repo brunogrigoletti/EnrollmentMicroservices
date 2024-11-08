@@ -65,7 +65,7 @@ public class SubjectsList {
         subjects.setVisibleRowCount(10);
     }
 
-    private void setListByStudent(Object std) {
+    private void setListByStudent(Student std) {
         List<Subject> subjectsList = fetchAllSubjects();
         DefaultListModel<String> model = new DefaultListModel<>();
         for (Subject subject : subjectsList) {

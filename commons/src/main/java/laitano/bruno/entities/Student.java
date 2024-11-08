@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Student implements Serializable {
@@ -15,19 +16,18 @@ public class Student implements Serializable {
     private String name;
     private String address;
 	private String document;
-	private Set<String> generatedNumbers;
-	@ManyToMany (mappedBy="students")
-	private List<Subject> subjects;
+	private Set<String> generatedNumbers = new HashSet<>();
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+ 	@ManyToMany (mappedBy="students")
+	private List<Subject> subjects = new ArrayList<>();
 	
 	protected Student() {
 	}
 					
 	public Student(String name, String address, String document) {
-		this.generatedNumbers = new HashSet<>();
 		this.name = name;
 		this.address = address;
 		this.document = document;
-		this.subjects = new ArrayList<>();
 		this.rn = generateRn();
 	}
 

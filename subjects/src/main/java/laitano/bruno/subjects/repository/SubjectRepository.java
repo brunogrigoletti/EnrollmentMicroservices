@@ -12,4 +12,5 @@ public interface SubjectRepository {
     Subject getSubjectCode(String id);
     List<String> getClassCodes();
     List<Student> getStudentsByClass(String classCode);
+    void deleteAllSubjects();
 }
